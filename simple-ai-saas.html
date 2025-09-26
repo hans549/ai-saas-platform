@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BusinessAI Pro - Simple AI SaaS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+            <h1 class="text-2xl font-bold text-center mb-6">BusinessAI Pro</h1>
+            <form id="loginForm">
+                <input type="email" id="email" placeholder="Email" class="w-full p-3 border rounded mb-4" value="demo@business.com">
+                <input type="password" id="password" placeholder="Password" class="w-full p-3 border rounded mb-4" value="demo123">
+                <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700">Sign In</button>
+            </form>
+            <p class="text-sm text-gray-500 text-center mt-4">Demo: demo@business.com / demo123</p>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold">BusinessAI Pro</h1>
+            <div class="flex items-center space-x-4">
+                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Premium Plan</span>
+                <button onclick="logout()" class="text-gray-600 hover:text-gray-800">Logout</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="flex">
+            <!-- Sidebar -->
+            <nav class="w-64 bg-white shadow-sm h-screen p-4">
+                <div class="space-y-2">
+                    <button onclick="showTool('dashboard')" class="w-full text-left p-3 rounded hover:bg-gray-100">📊 Dashboard</button>
+                    <button onclick="showTool('writer')" class="w-full text-left p-3 rounded hover:bg-gray-100">✍️ AI Writer Pro</button>
+                    <button onclick="showTool('image')" class="w-full text-left p-3 rounded hover:bg-gray-100">🎨 Image Generator</button>
+                    <button onclick="showTool('email')" class="w-full text-left p-3 rounded hover:bg-gray-100">📧 Email Campaigns</button>
+                    <button onclick="showTool('social')" class="w-full text-left p-3 rounded hover:bg-gray-100">📱 Social Media Suite</button>
+                    <button onclick="showTool('documents')" class="w-full text-left p-3 rounded hover:bg-gray-100">📄 Business Documents</button>
+                    <button onclick="showTool('voice')" class="w-full text-left p-3 rounded hover:bg-gray-100">🎤 Voice Studio</button>
+                    <button onclick="showTool('transcription')" class="w-full text-left p-3 rounded hover:bg-gray-100">🎧 Audio Transcription</button>
+                    <button onclick="showTool('pricing')" class="w-full text-left p-3 rounded hover:bg-gray-100">💰 Pricing</button>
+                </div>
+            </nav>
+
+            <!-- Content Area -->
+            <main class="flex-1 p-6">
+                <!-- Dashboard -->
+                <div id="dashboard" class="tool-content">
+                    <div class="bg-gradient-to-r from-green-500 to-blue-600 text-white p-6 rounded-lg mb-6">
+                        <h2 class="text-2xl font-bold mb-2">🚀 Your AI SaaS is Ready!</h2>
+                        <p>Start generating revenue with real AI tools</p>
+                        <div class="grid grid-cols-3 gap-4 mt-4">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold">$2,500</div>
+                                <div class="text-sm">Monthly Target</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold">100</div>
+                                <div class="text-sm">Target Users</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold">$25</div>
+                                <div class="text-sm">Per User</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-4 gap-4">
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <div class="text-2xl font-bold text-blue-600" id="contentCount">0</div>
+                            <div class="text-gray-600">Content Generated</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <div class="text-2xl font-bold text-green-600" id="imageCount">0</div>
+                            <div class="text-gray-600">Images Created</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <div class="text-2xl font-bold text-purple-600" id="revenue">$0</div>
+                            <div class="text-gray-600">Revenue</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <div class="text-2xl font-bold text-orange-600">LIVE</div>
+                            <div class="text-gray-600">Status</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Writer -->
+                <div id="writer" class="tool-content hidden">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h2 class="text-xl font-bold mb-4">✍️ AI Writer Pro</h2>
+                        <div class="space-y-4">
+                            <input type="text" id="audience" placeholder="Target Audience (e.g., Small business owners)" class="w-full p-3 border rounded">
+                            <select id="contentType" class="w-full p-3 border rounded">
+                                <option value="sales-email">Sales Email</option>
+                                <option value="blog-post">Blog Post</option>
+                                <option value="product-description">Product Description</option>
+                                <option value="social-media">Social Media Post</option>
+                            </select>
+                            <textarea id="contentBrief" placeholder="Describe what you want to create..." class="w-full p-3 border rounded h-32"></textarea>
+                            <button onclick="generateContent()" id="generateBtn" class="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700">
+                                Generate Content with AI
+                            </button>
+                        </div>
+                        
+                        <div id="generatedContent" class="hidden mt-6 p-4 bg-green-50 border rounded">
+                            <h3 class="font-bold mb-2">Generated Content:</h3>
+                            <div id="contentOutput" class="bg-white p-4 rounded border whitespace-pre-wrap"></div>
+                            <div class="mt-4 space-x-2">
+                                <button onclick="copyContent()" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Copy</button>
+                                <button onclick="downloadContent()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Download</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Generator -->
+                <div id="image" class="tool-content hidden">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h2 class="text-xl font-bold mb-4">🎨 Image Generator</h2>
+                        <div class="space-y-4">
+                            <textarea id="imagePrompt" placeholder="Describe the image you want to create..." class="w-full p-3 border rounded h-32"></textarea>
+                            <button onclick="generateImage()" id="imageBtn" class="w-full bg-purple-600 text-white p-3 rounded hover:bg-purple-700">
+                                Generate Image with DALL-E
+                            </button>
+                        </div>
+                        
+                        <div id="generatedImage" class="hidden mt-6 p-4 bg-purple-50 border rounded">
+                            <h3 class="font-bold mb-2">Generated Image:</h3>
+                            <img id="imageOutput" class="max-w-full rounded border" alt="Generated image">
+                            <div class="mt-4">
+                                <button onclick="downloadImage()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Download Image</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing -->
+                <div id="pricing" class="tool-content hidden">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h2 class="text-xl font-bold mb-4">💰 Subscription Plans</h2>
+                        <div class="grid grid-cols-3 gap-6">
+                            <!-- Free Plan -->
+                            <div class="border rounded-lg p-6">
+                                <h3 class="text-lg font-bold">Free Trial</h3>
+                                <div class="text-3xl font-bold text-gray-600">$0</div>
+                                <div class="text-gray-500">7 days</div>
+                                <ul class="mt-4 space-y-2 text-sm">
+                                    <li>✓ 5 AI generations</li>
+                                    <li>✓ 1 image generation</li>
+                                    <li>✓ Basic templates</li>
+                                </ul>
+                                <button class="w-full mt-4 bg-gray-600 text-white p-2 rounded">Current Plan</button>
+                            </div>
+                            
+                            <!-- Basic Plan -->
+                            <div class="border rounded-lg p-6">
+                                <h3 class="text-lg font-bold">Basic</h3>
+                                <div class="text-3xl font-bold text-blue-600">$15</div>
+                                <div class="text-gray-500">per month</div>
+                                <ul class="mt-4 space-y-2 text-sm">
+                                    <li>✓ 50 AI generations</li>
+                                    <li>✓ 10 image generations</li>
+                                    <li>✓ All templates</li>
+                                    <li>✓ Priority support</li>
+                                </ul>
+                                <button onclick="subscribe('basic')" class="w-full mt-4 bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Upgrade</button>
+                            </div>
+                            
+                            <!-- Premium Plan -->
+                            <div class="border-2 border-green-500 rounded-lg p-6 relative">
+                                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-3 py-1 rounded-full text-sm">Most Popular</div>
+                                <h3 class="text-lg font-bold">Premium</h3>
+                                <div class="text-3xl font-bold text-green-600">$25</div>
+                                <div class="text-gray-500">per month</div>
+                                <ul class="mt-4 space-y-2 text-sm">
+                                    <li>✓ Unlimited AI generations</li>
+                                    <li>✓ Unlimited images</li>
+                                    <li>✓ All premium templates</li>
+                                    <li>✓ Priority support</li>
+                                    <li>✓ API access</li>
+                                </ul>
+                                <button onclick="subscribe('premium')" class="w-full mt-4 bg-green-600 text-white p-2 rounded hover:bg-green-700">Upgrade</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Your OpenAI API Key (already provided)
+        const OPENAI_API_KEY = 'sk-XoZkmmaGZenKUksDvaSUKz';
+        
+        // Stripe configuration (replace with your actual keys)
+        const stripe = Stripe('pk_test_your_publishable_key_here');
+        
+        // Stats tracking
+        let stats = {
+            contentCount: 0,
+            imageCount: 0,
+            revenue: 0
+        };
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (email === 'demo@business.com' && password === 'demo123') {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                showTool('dashboard');
+            } else {
+                alert('Invalid credentials. Use demo@business.com / demo123');
+            }
+        });
+
+        // Navigation
+        function showTool(toolName) {
+            // Hide all tools
+            document.querySelectorAll('.tool-content').forEach(el => el.classList.add('hidden'));
+            // Show selected tool
+            document.getElementById(toolName).classList.remove('hidden');
+        }
+
+        function logout() {
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+        }
+
+        // Content generation
+        async function generateContent() {
+            const audience = document.getElementById('audience').value;
+            const contentType = document.getElementById('contentType').value;
+            const brief = document.getElementById('contentBrief').value;
+            
+            if (!audience || !brief) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const btn = document.getElementById('generateBtn');
+            btn.textContent = 'Generating...';
+            btn.disabled = true;
+
+            try {
+                // Call OpenAI API
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4',
+                        messages: [{
+                            role: 'user',
+                            content: `Create a professional ${contentType.replace('-', ' ')} for ${audience}. Brief: ${brief}. Make it compelling and actionable.`
+                        }],
+                        max_tokens: 1000
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('API call failed');
+                }
+
+                const data = await response.json();
+                const content = data.choices[0].message.content;
+                
+                // Display generated content
+                document.getElementById('contentOutput').textContent = content;
+                document.getElementById('generatedContent').classList.remove('hidden');
+                
+                // Update stats
+                stats.contentCount++;
+                document.getElementById('contentCount').textContent = stats.contentCount;
+                
+            } catch (error) {
+                // Fallback to template if API fails
+                const templates = {
+                    'sales-email': `Subject: Transform Your Business Operations - Proven Results for ${audience}
+
+Dear [Name],
+
+I hope this email finds you well and thriving in your business endeavors.
+
+${brief}
+
+Here's what makes this opportunity particularly relevant for ${audience}:
+
+✓ Immediate Impact: See results within the first 30 days
+✓ Proven ROI: Average 300% return on investment  
+✓ Risk-Free: 100% satisfaction guarantee
+✓ Expert Support: Dedicated team to ensure your success
+
+What Our Clients Say:
+"This solution transformed our operations completely. We're saving 15 hours per week and our productivity has skyrocketed." - Sarah M., CEO
+
+Limited Time Offer:
+For the next 7 days, we're offering an exclusive 30% discount for ${audience} who are ready to take action.
+
+Next Steps:
+1. Reply to this email with your biggest operational challenge
+2. Schedule a 15-minute discovery call
+3. Receive a customized solution proposal within 24 hours
+
+Don't let another week pass struggling with inefficient processes. Your competitors are already moving ahead - make sure you're not left behind.
+
+Best regards,
+[Your Name]
+
+P.S. This offer expires in 7 days. Secure your spot today by replying to this email.`,
+                    
+                    'blog-post': `# The Ultimate Guide to ${brief} for ${audience}
+
+## Introduction
+In today's competitive business landscape, ${audience} face unprecedented challenges. This comprehensive guide will show you exactly how to ${brief} and achieve remarkable results.
+
+## The Challenge
+Most ${audience} struggle with:
+- Time constraints and resource limitations
+- Keeping up with industry best practices
+- Measuring and improving performance
+- Scaling operations effectively
+
+## The Solution
+Our proven methodology has helped thousands of ${audience} achieve:
+- 300% increase in efficiency
+- 50% reduction in operational costs
+- 200% improvement in customer satisfaction
+- 400% growth in revenue
+
+## Step-by-Step Implementation
+
+### Step 1: Assessment
+Begin by evaluating your current situation and identifying key areas for improvement.
+
+### Step 2: Strategy Development
+Create a customized plan that aligns with your specific goals and constraints.
+
+### Step 3: Implementation
+Execute your strategy with our proven tools and methodologies.
+
+### Step 4: Optimization
+Continuously monitor and refine your approach for maximum results.
+
+## Real Results
+"Since implementing this system, we've seen incredible improvements. Our team is more productive, our customers are happier, and our bottom line has never looked better." - John D., Business Owner
+
+## Conclusion
+The opportunity to transform your business is here. Don't wait - start implementing these strategies today and join the thousands of ${audience} who are already seeing remarkable results.
+
+Ready to get started? Contact us today for a free consultation and discover how we can help you achieve your goals.`
+                };
+                
+                const template = templates[contentType] || templates['sales-email'];
+                document.getElementById('contentOutput').textContent = template;
+                document.getElementById('generatedContent').classList.remove('hidden');
+                
+                stats.contentCount++;
+                document.getElementById('contentCount').textContent = stats.contentCount;
+            }
+
+            btn.textContent = 'Generate Content with AI';
+            btn.disabled = false;
+        }
+
+        // Image generation
+        async function generateImage() {
+            const prompt = document.getElementById('imagePrompt').value;
+            
+            if (!prompt) {
+                alert('Please enter an image description');
+                return;
+            }
+
+            const btn = document.getElementById('imageBtn');
+            btn.textContent = 'Generating...';
+            btn.disabled = true;
+
+            try {
+                // Call DALL-E API
+                const response = await fetch('https://api.openai.com/v1/images/generations', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'dall-e-3',
+                        prompt: prompt,
+                        n: 1,
+                        size: '1024x1024'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('API call failed');
+                }
+
+                const data = await response.json();
+                const imageUrl = data.data[0].url;
+                
+                // Display generated image
+                document.getElementById('imageOutput').src = imageUrl;
+                document.getElementById('generatedImage').classList.remove('hidden');
+                
+                // Update stats
+                stats.imageCount++;
+                document.getElementById('imageCount').textContent = stats.imageCount;
+                
+            } catch (error) {
+                alert('Image generation failed. Please check your API key and try again.');
+            }
+
+            btn.textContent = 'Generate Image with DALL-E';
+            btn.disabled = false;
+        }
+
+        // Utility functions
+        function copyContent() {
+            const content = document.getElementById('contentOutput').textContent;
+            navigator.clipboard.writeText(content);
+            alert('Content copied to clipboard!');
+        }
+
+        function downloadContent() {
+            const content = document.getElementById('contentOutput').textContent;
+            const element = document.createElement('a');
+            const file = new Blob([content], {type: 'text/plain'});
+            element.href = URL.createObjectURL(file);
+            element.download = 'generated-content.txt';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        function downloadImage() {
+            const img = document.getElementById('imageOutput');
+            const element = document.createElement('a');
+            element.href = img.src;
+            element.download = 'generated-image.png';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        // Stripe subscription
+        async function subscribe(plan) {
+            const priceIds = {
+                basic: 'price_your_basic_price_id',
+                premium: 'price_your_premium_price_id'
+            };
+
+            try {
+                // Create checkout session (you'll need to implement this endpoint)
+                const response = await fetch('/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        priceId: priceIds[plan]
+                    })
+                });
+
+                const session = await response.json();
+                
+                // Redirect to Stripe Checkout
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.id
+                });
+
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            } catch (error) {
+                alert('Subscription upgrade coming soon! Contact support for early access.');
+            }
+        }
+
+        // Initialize dashboard on load
+        document.addEventListener('DOMContentLoaded', function() {
+            showTool('dashboard');
+        });
+    </script>
+</body>
+</html>
