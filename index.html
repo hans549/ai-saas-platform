@@ -1,27 +1,29 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>BusinessAI Pro</title>
+    <title>BusinessAI Pro - Community Platform</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .login { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); max-width: 400px; }
+        .card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); max-width: 400px; width: 100%; }
         .card h1 { text-align: center; margin-bottom: 30px; color: #333; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
         button { width: 100%; padding: 12px; background: #4299e1; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
         button:hover { background: #3182ce; }
         .demo { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
+        .link-btn { background: none; color: #4299e1; text-decoration: underline; padding: 0; font-size: 14px; margin-top: 10px; }
         .app { display: none; }
         .header { background: white; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 24px; font-weight: bold; color: #333; }
+        .header-right { display: flex; align-items: center; gap: 16px; }
         .plan { background: #48bb78; color: white; padding: 6px 12px; border-radius: 20px; font-size: 14px; }
-        .logout { background: none; border: none; color: #666; cursor: pointer; }
+        .role-badge { background: #f59e0b; color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; }
+        .logout { background: none; border: none; color: #666; cursor: pointer; padding: 8px 16px; }
         .layout { display: flex; min-height: calc(100vh - 80px); }
-        .sidebar { width: 280px; background: white; box-shadow: 2px 0 4px rgba(0,0,0,0.1); padding: 24px 0; }
+        .sidebar { width: 280px; background: white; box-shadow: 2px 0 4px rgba(0,0,0,0.1); padding: 24px 0; overflow-y: auto; }
         .nav { display: block; width: 100%; padding: 12px 24px; border: none; background: none; color: #666; font-size: 16px; cursor: pointer; text-align: left; }
         .nav:hover, .nav.active { background: #edf2f7; color: #333; }
-        .content { flex: 1; padding: 32px; }
+        .content { flex: 1; padding: 32px; overflow-y: auto; background: #f7fafc; }
         .hero { background: linear-gradient(135deg, #48bb78 0%, #4299e1 100%); color: white; padding: 40px; border-radius: 12px; margin-bottom: 32px; }
         .hero h2 { font-size: 32px; margin-bottom: 8px; }
         .hero p { font-size: 18px; opacity: 0.9; margin-bottom: 24px; }
@@ -36,9 +38,10 @@
         .tool { background: white; padding: 32px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .tool h2 { font-size: 24px; margin-bottom: 24px; color: #333; }
         .form-group { margin-bottom: 16px; }
-        .form-input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+        .form-input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
         .form-select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; background: white; }
-        .form-textarea { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; min-height: 120px; }
+        .form-textarea { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; min-height: 120px; box-sizing: border-box; }
         .generate-btn { width: 100%; padding: 16px; background: #4299e1; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .generate-btn:hover { background: #3182ce; }
         .result { background: #f0fff4; border: 2px solid #9ae6b4; border-radius: 8px; padding: 24px; margin-top: 24px; display: none; }
@@ -58,7 +61,60 @@
         .upgrade-btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .current { background: #666; color: white; }
         .upgrade { background: #48bb78; color: white; }
-        @media (max-width: 768px) { .layout { flex-direction: column; } .sidebar { width: 100%; } .stats, .metrics, .pricing { grid-template-columns: 1fr; } }
+
+        /* Community Membership Styles */
+        .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 24px; }
+        .member-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        .member-card:hover { transform: translateY(-4px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .member-avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 32px; font-weight: bold; margin: 0 auto 16px; }
+        .member-name { font-size: 18px; font-weight: bold; text-align: center; margin-bottom: 8px; }
+        .member-email { font-size: 14px; color: #666; text-align: center; margin-bottom: 12px; }
+        .member-tier { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin: 4px auto; display: block; text-align: center; width: fit-content; margin: 8px auto; }
+        .tier-free { background: #e2e8f0; color: #4a5568; }
+        .tier-basic { background: #dbeafe; color: #1e40af; }
+        .tier-premium { background: #dcfce7; color: #15803d; }
+        .tier-enterprise { background: #fef3c7; color: #92400e; }
+        .member-stats { display: flex; justify-content: space-around; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+        .member-stat { text-align: center; }
+        .member-stat-value { font-weight: bold; color: #333; }
+        .member-stat-label { font-size: 12px; color: #666; margin-top: 4px; }
+        .search-bar { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 20px; }
+        .filter-group { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-btn { padding: 8px 16px; border: 2px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .filter-btn.active { background: #4299e1; color: white; border-color: #4299e1; }
+        .activity-feed { background: white; border-radius: 12px; padding: 24px; }
+        .activity-item { padding: 16px; border-left: 3px solid #4299e1; margin-bottom: 16px; background: #f7fafc; border-radius: 4px; }
+        .activity-time { font-size: 12px; color: #666; margin-bottom: 8px; }
+        .activity-text { color: #333; }
+        .profile-header { background: white; border-radius: 12px; padding: 32px; margin-bottom: 24px; text-align: center; }
+        .profile-avatar { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 48px; font-weight: bold; margin: 0 auto 16px; }
+        .profile-name { font-size: 28px; font-weight: bold; margin-bottom: 8px; }
+        .profile-email { color: #666; margin-bottom: 16px; }
+        .profile-bio { max-width: 600px; margin: 16px auto; color: #666; line-height: 1.6; }
+        .admin-controls { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+        .admin-action { padding: 10px 20px; margin: 4px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .admin-approve { background: #48bb78; color: white; }
+        .admin-reject { background: #ef4444; color: white; }
+        .admin-promote { background: #f59e0b; color: white; }
+        .admin-table { width: 100%; background: white; border-radius: 12px; overflow: hidden; }
+        .admin-table th { background: #f7fafc; padding: 12px; text-align: left; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
+        .admin-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
+        .status-pending { color: #f59e0b; font-weight: 600; }
+        .status-active { color: #48bb78; font-weight: 600; }
+        .status-suspended { color: #ef4444; font-weight: 600; }
+        .tab-group { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; }
+        .tab-btn { padding: 12px 24px; border: none; background: none; cursor: pointer; font-size: 16px; color: #666; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+        .tab-btn.active { color: #4299e1; border-bottom-color: #4299e1; font-weight: 600; }
+        .notification-badge { background: #ef4444; color: white; border-radius: 50%; padding: 2px 6px; font-size: 11px; margin-left: 8px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        @media (max-width: 768px) {
+            .layout { flex-direction: column; }
+            .sidebar { width: 100%; }
+            .stats, .metrics, .pricing { grid-template-columns: 1fr; }
+            .member-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -67,11 +123,37 @@
         <div class="card">
             <h1>BusinessAI Pro</h1>
             <form id="loginForm">
-                <input type="email" id="email" placeholder="Email" value="demo@business.com" required>
-                <input type="password" id="password" placeholder="Password" value="demo123" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
                 <button type="submit">Sign In</button>
             </form>
-            <div class="demo">Demo: demo@business.com / demo123</div>
+            <button class="link-btn" onclick="showRegister()">Create New Account</button>
+            <div class="demo">Demo Admin: admin@business.com / admin123<br>Demo User: demo@business.com / demo123</div>
+        </div>
+    </div>
+
+    <!-- Registration Screen -->
+    <div id="registerScreen" class="login" style="display: none;">
+        <div class="card">
+            <h1>Join Our Community</h1>
+            <form id="registerForm">
+                <input type="text" id="regName" placeholder="Full Name" required>
+                <input type="email" id="regEmail" placeholder="Email" required>
+                <input type="password" id="regPassword" placeholder="Password (min 6 characters)" required>
+                <input type="tel" id="regPhone" placeholder="Phone Number (optional)">
+                <textarea id="regBio" placeholder="Tell us about yourself..." style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; min-height: 80px; box-sizing: border-box;"></textarea>
+                <div class="form-group">
+                    <label class="form-label">Select Membership Tier:</label>
+                    <select id="regTier" class="form-select">
+                        <option value="free">Free - Basic Access</option>
+                        <option value="basic">Basic - $15/month</option>
+                        <option value="premium">Premium - $25/month</option>
+                        <option value="enterprise">Enterprise - $50/month</option>
+                    </select>
+                </div>
+                <button type="submit">Create Account</button>
+            </form>
+            <button class="link-btn" onclick="showLogin()">Back to Login</button>
         </div>
     </div>
 
@@ -80,8 +162,10 @@
         <!-- Header -->
         <header class="header">
             <div class="logo">BusinessAI Pro</div>
-            <div>
-                <span class="plan">Premium Plan</span>
+            <div class="header-right">
+                <span class="plan" id="userTier">Free Plan</span>
+                <span class="role-badge" id="userRole">Member</span>
+                <span id="userName" style="color: #666; margin-right: 8px;">User</span>
                 <button class="logout" onclick="logout()">Logout</button>
             </div>
         </header>
@@ -90,15 +174,21 @@
         <div class="layout">
             <!-- Sidebar -->
             <nav class="sidebar">
-                <button class="nav active" onclick="showTool('dashboard')">ðŸ“Š Dashboard</button>
-                <button class="nav" onclick="showTool('writer')">âœï¸ AI Writer Pro</button>
-                <button class="nav" onclick="showTool('image')">ðŸŽ¨ Image Generator</button>
-                <button class="nav" onclick="showTool('email')">ðŸ“§ Email Campaigns</button>
-                <button class="nav" onclick="showTool('social')">ðŸ“± Social Media Suite</button>
-                <button class="nav" onclick="showTool('documents')">ðŸ“„ Business Documents</button>
-                <button class="nav" onclick="showTool('voice')">ðŸŽ¤ Voice Studio</button>
-                <button class="nav" onclick="showTool('transcription')">ðŸŽ§ Audio Transcription</button>
-                <button class="nav" onclick="showTool('pricing')">ðŸ’° Pricing</button>
+                <button class="nav active" onclick="showTool('dashboard')">📊 Dashboard</button>
+                <button class="nav" onclick="showTool('community')">👥 Community</button>
+                <button class="nav" onclick="showTool('members')">📋 Member Directory</button>
+                <button class="nav" onclick="showTool('myprofile')">👤 My Profile</button>
+                <button class="nav" onclick="showTool('activity')">🔔 Activity Feed</button>
+                <button class="nav" id="adminNav" onclick="showTool('admin')" style="display: none;">⚙️ Admin Panel<span class="notification-badge" id="adminNotif">0</span></button>
+                <hr style="margin: 16px 0; border: none; border-top: 1px solid #e2e8f0;">
+                <button class="nav" onclick="showTool('writer')">✏️ AI Writer Pro</button>
+                <button class="nav" onclick="showTool('image')">🎨 Image Generator</button>
+                <button class="nav" onclick="showTool('email')">📧 Email Campaigns</button>
+                <button class="nav" onclick="showTool('social')">📱 Social Media Suite</button>
+                <button class="nav" onclick="showTool('documents')">📄 Business Documents</button>
+                <button class="nav" onclick="showTool('voice')">🎤 Voice Studio</button>
+                <button class="nav" onclick="showTool('transcription')">🎧 Audio Transcription</button>
+                <button class="nav" onclick="showTool('pricing')">💰 Pricing</button>
             </nav>
 
             <!-- Content -->
@@ -106,24 +196,24 @@
                 <!-- Dashboard -->
                 <div id="dashboard" class="tool-content">
                     <div class="hero">
-                        <h2>ðŸš€ Your AI SaaS is Ready!</h2>
-                        <p>Start generating revenue with real AI tools</p>
+                        <h2>🚀 Welcome to BusinessAI Pro Community!</h2>
+                        <p>Connect, collaborate, and grow with our community</p>
                         <div class="stats">
                             <div class="stat">
-                                <div class="stat-value">$2,500</div>
-                                <div class="stat-label">Monthly Target</div>
+                                <div class="stat-value" id="totalMembers">0</div>
+                                <div class="stat-label">Total Members</div>
                             </div>
                             <div class="stat">
-                                <div class="stat-value">100</div>
-                                <div class="stat-label">Target Users</div>
+                                <div class="stat-value" id="activeMembers">0</div>
+                                <div class="stat-label">Active Members</div>
                             </div>
                             <div class="stat">
-                                <div class="stat-value">$25</div>
-                                <div class="stat-label">Per User</div>
+                                <div class="stat-value" id="newMembers">0</div>
+                                <div class="stat-label">New This Month</div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="metrics">
                         <div class="metric">
                             <div class="metric-value" id="contentCount">0</div>
@@ -134,12 +224,186 @@
                             <div class="metric-label">Images Created</div>
                         </div>
                         <div class="metric">
-                            <div class="metric-value">$0</div>
-                            <div class="metric-label">Revenue</div>
+                            <div class="metric-value" id="memberActivities">0</div>
+                            <div class="metric-label">Community Activities</div>
                         </div>
                         <div class="metric">
                             <div class="metric-value">LIVE</div>
-                            <div class="metric-label">Status</div>
+                            <div class="metric-label">Platform Status</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Community Overview -->
+                <div id="community" class="tool-content hidden">
+                    <div class="tool">
+                        <h2>👥 Community Overview</h2>
+                        <div class="tab-group">
+                            <button class="tab-btn active" onclick="switchCommunityTab('overview')">Overview</button>
+                            <button class="tab-btn" onclick="switchCommunityTab('stats')">Statistics</button>
+                            <button class="tab-btn" onclick="switchCommunityTab('tiers')">Membership Tiers</button>
+                        </div>
+
+                        <div id="communityOverview">
+                            <div class="metrics" style="margin-bottom: 24px;">
+                                <div class="metric">
+                                    <div class="metric-value" id="freeTierCount">0</div>
+                                    <div class="metric-label">Free Members</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value" id="basicTierCount">0</div>
+                                    <div class="metric-label">Basic Members</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value" id="premiumTierCount">0</div>
+                                    <div class="metric-label">Premium Members</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value" id="enterpriseTierCount">0</div>
+                                    <div class="metric-label">Enterprise Members</div>
+                                </div>
+                            </div>
+
+                            <h3>Recent Community Activity</h3>
+                            <div id="communityActivityFeed" class="activity-feed"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Member Directory -->
+                <div id="members" class="tool-content hidden">
+                    <div class="tool">
+                        <h2>📋 Member Directory</h2>
+                        <input type="text" id="memberSearch" class="search-bar" placeholder="Search members by name or email..." onkeyup="filterMembers()">
+
+                        <div class="filter-group">
+                            <button class="filter-btn active" onclick="filterByTier('all')">All Members</button>
+                            <button class="filter-btn" onclick="filterByTier('free')">Free</button>
+                            <button class="filter-btn" onclick="filterByTier('basic')">Basic</button>
+                            <button class="filter-btn" onclick="filterByTier('premium')">Premium</button>
+                            <button class="filter-btn" onclick="filterByTier('enterprise')">Enterprise</button>
+                        </div>
+
+                        <div id="memberDirectory" class="member-grid"></div>
+                    </div>
+                </div>
+
+                <!-- My Profile -->
+                <div id="myprofile" class="tool-content hidden">
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="profileAvatar">U</div>
+                        <div class="profile-name" id="profileName">User Name</div>
+                        <div class="profile-email" id="profileEmail">user@email.com</div>
+                        <div class="member-tier" id="profileTier">Free Member</div>
+                        <div class="profile-bio" id="profileBio">No bio provided yet.</div>
+
+                        <div class="member-stats" style="max-width: 400px; margin: 24px auto;">
+                            <div class="member-stat">
+                                <div class="member-stat-value" id="profileContent">0</div>
+                                <div class="member-stat-label">Content</div>
+                            </div>
+                            <div class="member-stat">
+                                <div class="member-stat-value" id="profileImages">0</div>
+                                <div class="member-stat-label">Images</div>
+                            </div>
+                            <div class="member-stat">
+                                <div class="member-stat-value" id="profileDays">0</div>
+                                <div class="member-stat-label">Days Active</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tool">
+                        <h2>Edit Profile</h2>
+                        <form id="profileForm">
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" id="editName" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" id="editPhone" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Bio</label>
+                                <textarea id="editBio" class="form-textarea"></textarea>
+                            </div>
+                            <button type="submit" class="generate-btn">Update Profile</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Activity Feed -->
+                <div id="activity" class="tool-content hidden">
+                    <div class="tool">
+                        <h2>🔔 Activity Feed</h2>
+                        <div id="activityFeed" class="activity-feed"></div>
+                    </div>
+                </div>
+
+                <!-- Admin Panel -->
+                <div id="admin" class="tool-content hidden">
+                    <div class="tool">
+                        <h2>⚙️ Admin Panel</h2>
+                        <div class="tab-group">
+                            <button class="tab-btn active" onclick="switchAdminTab('pending')">Pending Approvals<span class="notification-badge" id="pendingCount">0</span></button>
+                            <button class="tab-btn" onclick="switchAdminTab('all')">All Members</button>
+                            <button class="tab-btn" onclick="switchAdminTab('analytics')">Analytics</button>
+                        </div>
+
+                        <div id="adminPending">
+                            <h3>Pending Member Approvals</h3>
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Tier</th>
+                                        <th>Joined</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pendingMembersTable"></tbody>
+                            </table>
+                        </div>
+
+                        <div id="adminAll" class="hidden">
+                            <h3>All Members Management</h3>
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Tier</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allMembersTable"></tbody>
+                            </table>
+                        </div>
+
+                        <div id="adminAnalytics" class="hidden">
+                            <h3>Community Analytics</h3>
+                            <div class="metrics">
+                                <div class="metric">
+                                    <div class="metric-value" id="analyticsTotal">0</div>
+                                    <div class="metric-label">Total Members</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value" id="analyticsActive">0</div>
+                                    <div class="metric-label">Active Members</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value" id="analyticsPending">0</div>
+                                    <div class="metric-label">Pending Approval</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value" id="analyticsRevenue">$0</div>
+                                    <div class="metric-label">Monthly Revenue</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -147,7 +411,7 @@
                 <!-- AI Writer -->
                 <div id="writer" class="tool-content hidden">
                     <div class="tool">
-                        <h2>âœï¸ AI Writer Pro</h2>
+                        <h2>✏️ AI Writer Pro</h2>
                         <div class="form-group">
                             <input type="text" id="audience" class="form-input" placeholder="Target Audience (e.g., Small business owners)">
                         </div>
@@ -163,7 +427,7 @@
                             <textarea id="contentBrief" class="form-textarea" placeholder="Describe what you want to create..."></textarea>
                         </div>
                         <button onclick="generateContent()" class="generate-btn">Generate Content with AI</button>
-                        
+
                         <div id="generatedContent" class="result">
                             <div><strong>Generated Content:</strong></div>
                             <div id="contentOutput" class="result-content"></div>
@@ -178,12 +442,12 @@
                 <!-- Image Generator -->
                 <div id="image" class="tool-content hidden">
                     <div class="tool">
-                        <h2>ðŸŽ¨ Image Generator</h2>
+                        <h2>🎨 Image Generator</h2>
                         <div class="form-group">
                             <textarea id="imagePrompt" class="form-textarea" placeholder="Describe the image you want to create..."></textarea>
                         </div>
                         <button onclick="generateImage()" class="generate-btn">Generate Image with DALL-E</button>
-                        
+
                         <div id="generatedImage" class="result">
                             <div><strong>Generated Image:</strong></div>
                             <img id="imageOutput" style="max-width: 100%; border-radius: 8px;" alt="Generated image">
@@ -197,7 +461,7 @@
                 <!-- Email Campaigns -->
                 <div id="email" class="tool-content hidden">
                     <div class="tool">
-                        <h2>ðŸ“§ Email Campaign Creator</h2>
+                        <h2>📧 Email Campaign Creator</h2>
                         <div class="form-group">
                             <input type="text" id="emailAudience" class="form-input" placeholder="Target Audience">
                         </div>
@@ -213,7 +477,7 @@
                             <textarea id="emailGoal" class="form-textarea" placeholder="Campaign goal and key message..."></textarea>
                         </div>
                         <button onclick="generateEmail()" class="generate-btn">Create Email Campaign</button>
-                        
+
                         <div id="emailResult" class="result">
                             <div><strong>Generated Email Campaign:</strong></div>
                             <div id="emailOutput" class="result-content"></div>
@@ -228,7 +492,7 @@
                 <!-- Social Media Suite -->
                 <div id="social" class="tool-content hidden">
                     <div class="tool">
-                        <h2>ðŸ“± Social Media Suite</h2>
+                        <h2>📱 Social Media Suite</h2>
                         <div class="form-group">
                             <select id="socialPlatform" class="form-select">
                                 <option value="linkedin">LinkedIn</option>
@@ -244,7 +508,7 @@
                             <textarea id="socialMessage" class="form-textarea" placeholder="Key message or call-to-action..."></textarea>
                         </div>
                         <button onclick="generateSocial()" class="generate-btn">Generate Social Content</button>
-                        
+
                         <div id="socialResult" class="result">
                             <div><strong>Generated Social Content:</strong></div>
                             <div id="socialOutput" class="result-content"></div>
@@ -259,7 +523,7 @@
                 <!-- Business Documents -->
                 <div id="documents" class="tool-content hidden">
                     <div class="tool">
-                        <h2>ðŸ“„ Business Document Generator</h2>
+                        <h2>📄 Business Document Generator</h2>
                         <div class="form-group">
                             <select id="docType" class="form-select">
                                 <option value="proposal">Business Proposal</option>
@@ -275,7 +539,7 @@
                             <textarea id="docDetails" class="form-textarea" placeholder="Document details and requirements..."></textarea>
                         </div>
                         <button onclick="generateDocument()" class="generate-btn">Generate Document</button>
-                        
+
                         <div id="docResult" class="result">
                             <div><strong>Generated Document:</strong></div>
                             <div id="docOutput" class="result-content"></div>
@@ -290,7 +554,7 @@
                 <!-- Voice Studio -->
                 <div id="voice" class="tool-content hidden">
                     <div class="tool">
-                        <h2>ðŸŽ¤ Voice Studio</h2>
+                        <h2>🎤 Voice Studio</h2>
                         <div class="form-group">
                             <select id="voiceType" class="form-select">
                                 <option value="podcast">Podcast Script</option>
@@ -306,7 +570,7 @@
                             <textarea id="voiceNotes" class="form-textarea" placeholder="Key points and tone..."></textarea>
                         </div>
                         <button onclick="generateVoice()" class="generate-btn">Create Voice Script</button>
-                        
+
                         <div id="voiceResult" class="result">
                             <div><strong>Generated Voice Script:</strong></div>
                             <div id="voiceOutput" class="result-content"></div>
@@ -321,13 +585,13 @@
                 <!-- Audio Transcription -->
                 <div id="transcription" class="tool-content hidden">
                     <div class="tool">
-                        <h2>ðŸŽ§ Audio Transcription</h2>
+                        <h2>🎧 Audio Transcription</h2>
                         <div style="border: 2px dashed #ccc; border-radius: 8px; padding: 40px; text-align: center; margin-bottom: 24px;">
                             <input type="file" id="audioFile" accept="audio/*" style="display: none;" onchange="handleAudioUpload()">
-                            <button onclick="document.getElementById('audioFile').click()" class="generate-btn" style="width: auto; padding: 12px 24px;">ðŸ“ Upload Audio File</button>
+                            <button onclick="document.getElementById('audioFile').click()" class="generate-btn" style="width: auto; padding: 12px 24px;">📁 Upload Audio File</button>
                             <p style="color: #666; margin-top: 16px;">Supports MP3, WAV, M4A files up to 25MB</p>
                         </div>
-                        
+
                         <div id="transcriptionResult" class="result">
                             <div><strong>Transcription:</strong></div>
                             <div id="transcriptionText" class="result-content"></div>
@@ -342,49 +606,52 @@
                 <!-- Pricing -->
                 <div id="pricing" class="tool-content hidden">
                     <div class="tool">
-                        <h2>ðŸ’° Subscription Plans</h2>
+                        <h2>💰 Subscription Plans</h2>
                         <div class="pricing">
                             <!-- Free Trial -->
                             <div class="price-card">
-                                <h3>Free Trial</h3>
+                                <h3>Free</h3>
                                 <div class="price">$0</div>
-                                <div class="price-period">7 days</div>
+                                <div class="price-period">forever</div>
                                 <ul class="features">
-                                    <li>âœ“ 5 AI generations</li>
-                                    <li>âœ“ 1 image generation</li>
-                                    <li>âœ“ Basic templates</li>
-                                    <li>âœ“ Email support</li>
+                                    <li>✓ 5 AI generations/month</li>
+                                    <li>✓ 1 image generation</li>
+                                    <li>✓ Basic templates</li>
+                                    <li>✓ Community access</li>
+                                    <li>✓ Email support</li>
                                 </ul>
-                                <button class="upgrade-btn current">Current Plan</button>
+                                <button onclick="upgradeTier('free')" class="upgrade-btn upgrade">Select Plan</button>
                             </div>
-                            
+
                             <!-- Basic Plan -->
                             <div class="price-card">
                                 <h3>Basic</h3>
                                 <div class="price">$15</div>
                                 <div class="price-period">per month</div>
                                 <ul class="features">
-                                    <li>âœ“ 50 AI generations</li>
-                                    <li>âœ“ 10 image generations</li>
-                                    <li>âœ“ All templates</li>
-                                    <li>âœ“ Priority support</li>
+                                    <li>✓ 50 AI generations</li>
+                                    <li>✓ 10 image generations</li>
+                                    <li>✓ All templates</li>
+                                    <li>✓ Priority support</li>
+                                    <li>✓ Member badge</li>
                                 </ul>
-                                <button onclick="subscribe('basic')" class="upgrade-btn upgrade">Upgrade Now</button>
+                                <button onclick="upgradeTier('basic')" class="upgrade-btn upgrade">Upgrade Now</button>
                             </div>
-                            
+
                             <!-- Premium Plan -->
                             <div class="price-card featured">
                                 <h3>Premium</h3>
                                 <div class="price">$25</div>
                                 <div class="price-period">per month</div>
                                 <ul class="features">
-                                    <li>âœ“ Unlimited AI generations</li>
-                                    <li>âœ“ Unlimited images</li>
-                                    <li>âœ“ All premium templates</li>
-                                    <li>âœ“ Priority support</li>
-                                    <li>âœ“ API access</li>
+                                    <li>✓ Unlimited AI generations</li>
+                                    <li>✓ Unlimited images</li>
+                                    <li>✓ All premium templates</li>
+                                    <li>✓ Priority support</li>
+                                    <li>✓ API access</li>
+                                    <li>✓ Early features</li>
                                 </ul>
-                                <button onclick="subscribe('premium')" class="upgrade-btn upgrade">Upgrade Now</button>
+                                <button onclick="upgradeTier('premium')" class="upgrade-btn upgrade">Upgrade Now</button>
                             </div>
                         </div>
                     </div>
@@ -394,50 +661,578 @@
     </div>
 
     <script>
-        // Stats tracking
+        // Community Membership System - Data Management
+        class CommunityMembershipSystem {
+            constructor() {
+                this.currentUser = null;
+                this.initializeData();
+            }
+
+            initializeData() {
+                // Initialize members array if not exists
+                if (!localStorage.getItem('members')) {
+                    const defaultMembers = [
+                        {
+                            id: 1,
+                            name: 'Admin User',
+                            email: 'admin@business.com',
+                            password: 'admin123',
+                            phone: '+1234567890',
+                            bio: 'Platform administrator',
+                            tier: 'enterprise',
+                            role: 'admin',
+                            status: 'active',
+                            joinDate: new Date().toISOString(),
+                            contentCount: 0,
+                            imageCount: 0
+                        },
+                        {
+                            id: 2,
+                            name: 'Demo User',
+                            email: 'demo@business.com',
+                            password: 'demo123',
+                            phone: '',
+                            bio: 'Demo member account',
+                            tier: 'premium',
+                            role: 'member',
+                            status: 'active',
+                            joinDate: new Date().toISOString(),
+                            contentCount: 0,
+                            imageCount: 0
+                        }
+                    ];
+                    localStorage.setItem('members', JSON.stringify(defaultMembers));
+                }
+
+                // Initialize activities
+                if (!localStorage.getItem('activities')) {
+                    localStorage.setItem('activities', JSON.stringify([]));
+                }
+            }
+
+            getMembers() {
+                return JSON.parse(localStorage.getItem('members') || '[]');
+            }
+
+            saveMember(member) {
+                const members = this.getMembers();
+                const existingIndex = members.findIndex(m => m.id === member.id);
+
+                if (existingIndex >= 0) {
+                    members[existingIndex] = member;
+                } else {
+                    member.id = Math.max(0, ...members.map(m => m.id)) + 1;
+                    members.push(member);
+                }
+
+                localStorage.setItem('members', JSON.stringify(members));
+                return member;
+            }
+
+            getMemberById(id) {
+                const members = this.getMembers();
+                return members.find(m => m.id === id);
+            }
+
+            getMemberByEmail(email) {
+                const members = this.getMembers();
+                return members.find(m => m.email === email);
+            }
+
+            authenticate(email, password) {
+                const member = this.getMemberByEmail(email);
+                if (member && member.password === password && member.status === 'active') {
+                    this.currentUser = member;
+                    sessionStorage.setItem('currentUser', JSON.stringify(member));
+                    return member;
+                }
+                return null;
+            }
+
+            register(memberData) {
+                const existingMember = this.getMemberByEmail(memberData.email);
+                if (existingMember) {
+                    return { success: false, message: 'Email already registered' };
+                }
+
+                const newMember = {
+                    ...memberData,
+                    id: null,
+                    role: 'member',
+                    status: 'pending',
+                    joinDate: new Date().toISOString(),
+                    contentCount: 0,
+                    imageCount: 0
+                };
+
+                this.saveMember(newMember);
+                this.addActivity(`New member ${newMember.name} registered`);
+                return { success: true, message: 'Registration successful! Awaiting admin approval.' };
+            }
+
+            addActivity(text) {
+                const activities = JSON.parse(localStorage.getItem('activities') || '[]');
+                activities.unshift({
+                    id: Date.now(),
+                    text: text,
+                    timestamp: new Date().toISOString()
+                });
+                // Keep only last 50 activities
+                if (activities.length > 50) activities.pop();
+                localStorage.setItem('activities', JSON.stringify(activities));
+            }
+
+            getActivities() {
+                return JSON.parse(localStorage.getItem('activities') || '[]');
+            }
+
+            updateMemberStats(memberId, type) {
+                const member = this.getMemberById(memberId);
+                if (member) {
+                    if (type === 'content') member.contentCount++;
+                    if (type === 'image') member.imageCount++;
+                    this.saveMember(member);
+
+                    // Update current user if it's them
+                    if (this.currentUser && this.currentUser.id === memberId) {
+                        this.currentUser = member;
+                        sessionStorage.setItem('currentUser', JSON.stringify(member));
+                    }
+                }
+            }
+        }
+
+        // Initialize system
+        const membershipSystem = new CommunityMembershipSystem();
         let stats = { contentCount: 0, imageCount: 0 };
+
+        // Check for existing session
+        window.onload = function() {
+            const savedUser = sessionStorage.getItem('currentUser');
+            if (savedUser) {
+                membershipSystem.currentUser = JSON.parse(savedUser);
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                initializeApp();
+            }
+        };
 
         // Login functionality
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            
-            if (email === 'demo@business.com' && password === 'demo123') {
+
+            const user = membershipSystem.authenticate(email, password);
+            if (user) {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainApp').style.display = 'block';
-                showTool('dashboard');
+                initializeApp();
+                membershipSystem.addActivity(`${user.name} logged in`);
             } else {
-                alert('Invalid credentials. Use demo@business.com / demo123');
+                alert('Invalid credentials or account pending approval');
             }
         });
+
+        // Registration functionality
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const memberData = {
+                name: document.getElementById('regName').value,
+                email: document.getElementById('regEmail').value,
+                password: document.getElementById('regPassword').value,
+                phone: document.getElementById('regPhone').value,
+                bio: document.getElementById('regBio').value,
+                tier: document.getElementById('regTier').value
+            };
+
+            if (memberData.password.length < 6) {
+                alert('Password must be at least 6 characters');
+                return;
+            }
+
+            const result = membershipSystem.register(memberData);
+            alert(result.message);
+
+            if (result.success) {
+                showLogin();
+                document.getElementById('registerForm').reset();
+            }
+        });
+
+        function showRegister() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('registerScreen').style.display = 'flex';
+        }
+
+        function showLogin() {
+            document.getElementById('registerScreen').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+        }
+
+        function initializeApp() {
+            const user = membershipSystem.currentUser;
+
+            // Update header
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userTier').textContent = user.tier.charAt(0).toUpperCase() + user.tier.slice(1) + ' Plan';
+            document.getElementById('userRole').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+
+            // Show admin nav if admin
+            if (user.role === 'admin') {
+                document.getElementById('adminNav').style.display = 'block';
+            }
+
+            updateDashboard();
+            updateMemberDirectory();
+            updateProfile();
+            updateActivityFeed();
+
+            if (user.role === 'admin') {
+                updateAdminPanel();
+            }
+
+            showTool('dashboard');
+        }
 
         // Navigation
         function showTool(toolName) {
             document.querySelectorAll('.tool-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(toolName).classList.remove('hidden');
             document.querySelectorAll('.nav').forEach(el => el.classList.remove('active'));
-            event.target.classList.add('active');
+
+            // Find and activate the correct nav button
+            const navButtons = document.querySelectorAll('.nav');
+            navButtons.forEach(btn => {
+                if (btn.onclick && btn.onclick.toString().includes(toolName)) {
+                    btn.classList.add('active');
+                }
+            });
         }
 
         function logout() {
+            membershipSystem.addActivity(`${membershipSystem.currentUser.name} logged out`);
+            membershipSystem.currentUser = null;
+            sessionStorage.removeItem('currentUser');
             document.getElementById('loginScreen').style.display = 'flex';
             document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
         }
 
-        // Content generation
+        // Dashboard updates
+        function updateDashboard() {
+            const members = membershipSystem.getMembers();
+            const activeMembers = members.filter(m => m.status === 'active');
+            const thisMonth = new Date();
+            thisMonth.setDate(1);
+            const newMembers = members.filter(m => new Date(m.joinDate) >= thisMonth);
+
+            document.getElementById('totalMembers').textContent = members.length;
+            document.getElementById('activeMembers').textContent = activeMembers.length;
+            document.getElementById('newMembers').textContent = newMembers.length;
+
+            // Update member activities count
+            const activities = membershipSystem.getActivities();
+            document.getElementById('memberActivities').textContent = activities.length;
+
+            // Update user stats
+            const user = membershipSystem.currentUser;
+            document.getElementById('contentCount').textContent = user.contentCount;
+            document.getElementById('imageCount').textContent = user.imageCount;
+
+            // Update community stats
+            updateCommunityStats();
+        }
+
+        function updateCommunityStats() {
+            const members = membershipSystem.getMembers();
+            const tierCounts = {
+                free: members.filter(m => m.tier === 'free').length,
+                basic: members.filter(m => m.tier === 'basic').length,
+                premium: members.filter(m => m.tier === 'premium').length,
+                enterprise: members.filter(m => m.tier === 'enterprise').length
+            };
+
+            document.getElementById('freeTierCount').textContent = tierCounts.free;
+            document.getElementById('basicTierCount').textContent = tierCounts.basic;
+            document.getElementById('premiumTierCount').textContent = tierCounts.premium;
+            document.getElementById('enterpriseTierCount').textContent = tierCounts.enterprise;
+
+            // Update community activity feed
+            const activities = membershipSystem.getActivities().slice(0, 10);
+            const feedHtml = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-time">${new Date(activity.timestamp).toLocaleString()}</div>
+                    <div class="activity-text">${activity.text}</div>
+                </div>
+            `).join('');
+            document.getElementById('communityActivityFeed').innerHTML = feedHtml || '<p>No recent activity</p>';
+        }
+
+        // Member Directory
+        function updateMemberDirectory() {
+            const members = membershipSystem.getMembers().filter(m => m.status === 'active');
+            displayMembers(members);
+        }
+
+        function displayMembers(members) {
+            const directory = document.getElementById('memberDirectory');
+
+            if (members.length === 0) {
+                directory.innerHTML = '<p>No members found</p>';
+                return;
+            }
+
+            const html = members.map(member => {
+                const initial = member.name.charAt(0).toUpperCase();
+                const tierClass = `tier-${member.tier}`;
+                const daysActive = Math.floor((new Date() - new Date(member.joinDate)) / (1000 * 60 * 60 * 24));
+
+                return `
+                    <div class="member-card">
+                        <div class="member-avatar">${initial}</div>
+                        <div class="member-name">${member.name}</div>
+                        <div class="member-email">${member.email}</div>
+                        <span class="member-tier ${tierClass}">${member.tier.toUpperCase()}</span>
+                        <div class="member-stats">
+                            <div class="member-stat">
+                                <div class="member-stat-value">${member.contentCount}</div>
+                                <div class="member-stat-label">Content</div>
+                            </div>
+                            <div class="member-stat">
+                                <div class="member-stat-value">${member.imageCount}</div>
+                                <div class="member-stat-label">Images</div>
+                            </div>
+                            <div class="member-stat">
+                                <div class="member-stat-value">${daysActive}</div>
+                                <div class="member-stat-label">Days</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            directory.innerHTML = html;
+        }
+
+        function filterMembers() {
+            const searchTerm = document.getElementById('memberSearch').value.toLowerCase();
+            const members = membershipSystem.getMembers().filter(m => {
+                return m.status === 'active' && (
+                    m.name.toLowerCase().includes(searchTerm) ||
+                    m.email.toLowerCase().includes(searchTerm)
+                );
+            });
+            displayMembers(members);
+        }
+
+        let currentTierFilter = 'all';
+        function filterByTier(tier) {
+            currentTierFilter = tier;
+
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter members
+            let members = membershipSystem.getMembers().filter(m => m.status === 'active');
+            if (tier !== 'all') {
+                members = members.filter(m => m.tier === tier);
+            }
+            displayMembers(members);
+        }
+
+        // Profile Management
+        function updateProfile() {
+            const user = membershipSystem.currentUser;
+            const initial = user.name.charAt(0).toUpperCase();
+            const daysActive = Math.floor((new Date() - new Date(user.joinDate)) / (1000 * 60 * 60 * 24));
+
+            document.getElementById('profileAvatar').textContent = initial;
+            document.getElementById('profileName').textContent = user.name;
+            document.getElementById('profileEmail').textContent = user.email;
+            document.getElementById('profileTier').textContent = user.tier.toUpperCase() + ' Member';
+            document.getElementById('profileTier').className = `member-tier tier-${user.tier}`;
+            document.getElementById('profileBio').textContent = user.bio || 'No bio provided yet.';
+            document.getElementById('profileContent').textContent = user.contentCount;
+            document.getElementById('profileImages').textContent = user.imageCount;
+            document.getElementById('profileDays').textContent = daysActive;
+
+            // Populate edit form
+            document.getElementById('editName').value = user.name;
+            document.getElementById('editPhone').value = user.phone || '';
+            document.getElementById('editBio').value = user.bio || '';
+        }
+
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const user = membershipSystem.currentUser;
+            user.name = document.getElementById('editName').value;
+            user.phone = document.getElementById('editPhone').value;
+            user.bio = document.getElementById('editBio').value;
+
+            membershipSystem.saveMember(user);
+            membershipSystem.currentUser = user;
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
+
+            updateProfile();
+            updateDashboard();
+            membershipSystem.addActivity(`${user.name} updated their profile`);
+            alert('Profile updated successfully!');
+        });
+
+        // Activity Feed
+        function updateActivityFeed() {
+            const activities = membershipSystem.getActivities();
+            const feedHtml = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-time">${new Date(activity.timestamp).toLocaleString()}</div>
+                    <div class="activity-text">${activity.text}</div>
+                </div>
+            `).join('');
+            document.getElementById('activityFeed').innerHTML = feedHtml || '<p>No recent activity</p>';
+        }
+
+        // Admin Panel
+        function updateAdminPanel() {
+            const members = membershipSystem.getMembers();
+            const pendingMembers = members.filter(m => m.status === 'pending');
+
+            document.getElementById('adminNotif').textContent = pendingMembers.length;
+            document.getElementById('pendingCount').textContent = pendingMembers.length;
+
+            // Pending members table
+            const pendingHtml = pendingMembers.map(member => `
+                <tr>
+                    <td>${member.name}</td>
+                    <td>${member.email}</td>
+                    <td><span class="member-tier tier-${member.tier}">${member.tier.toUpperCase()}</span></td>
+                    <td>${new Date(member.joinDate).toLocaleDateString()}</td>
+                    <td>
+                        <button class="admin-action admin-approve" onclick="approveMember(${member.id})">Approve</button>
+                        <button class="admin-action admin-reject" onclick="rejectMember(${member.id})">Reject</button>
+                    </td>
+                </tr>
+            `).join('');
+            document.getElementById('pendingMembersTable').innerHTML = pendingHtml || '<tr><td colspan="5">No pending approvals</td></tr>';
+
+            // All members table
+            const allHtml = members.map(member => `
+                <tr>
+                    <td>${member.name}</td>
+                    <td>${member.email}</td>
+                    <td><span class="member-tier tier-${member.tier}">${member.tier.toUpperCase()}</span></td>
+                    <td>${member.role}</td>
+                    <td><span class="status-${member.status}">${member.status.toUpperCase()}</span></td>
+                    <td>
+                        ${member.role !== 'admin' ? `
+                            <button class="admin-action admin-promote" onclick="promoteToModerator(${member.id})">Make Mod</button>
+                            <button class="admin-action admin-reject" onclick="suspendMember(${member.id})">Suspend</button>
+                        ` : '<em>Admin</em>'}
+                    </td>
+                </tr>
+            `).join('');
+            document.getElementById('allMembersTable').innerHTML = allHtml;
+
+            // Analytics
+            const activeMembers = members.filter(m => m.status === 'active');
+            const monthlyRevenue = members.reduce((sum, m) => {
+                if (m.status !== 'active') return sum;
+                const prices = { free: 0, basic: 15, premium: 25, enterprise: 50 };
+                return sum + (prices[m.tier] || 0);
+            }, 0);
+
+            document.getElementById('analyticsTotal').textContent = members.length;
+            document.getElementById('analyticsActive').textContent = activeMembers.length;
+            document.getElementById('analyticsPending').textContent = pendingMembers.length;
+            document.getElementById('analyticsRevenue').textContent = '$' + monthlyRevenue;
+        }
+
+        function approveMember(id) {
+            const member = membershipSystem.getMemberById(id);
+            member.status = 'active';
+            membershipSystem.saveMember(member);
+            membershipSystem.addActivity(`${member.name} was approved and joined the community`);
+            updateAdminPanel();
+            updateDashboard();
+            alert(`${member.name} has been approved!`);
+        }
+
+        function rejectMember(id) {
+            if (!confirm('Are you sure you want to reject this member?')) return;
+            const members = membershipSystem.getMembers();
+            const member = members.find(m => m.id === id);
+            const filtered = members.filter(m => m.id !== id);
+            localStorage.setItem('members', JSON.stringify(filtered));
+            membershipSystem.addActivity(`Member registration rejected: ${member.name}`);
+            updateAdminPanel();
+            updateDashboard();
+        }
+
+        function suspendMember(id) {
+            if (!confirm('Are you sure you want to suspend this member?')) return;
+            const member = membershipSystem.getMemberById(id);
+            member.status = 'suspended';
+            membershipSystem.saveMember(member);
+            membershipSystem.addActivity(`${member.name} was suspended`);
+            updateAdminPanel();
+            updateDashboard();
+        }
+
+        function promoteToModerator(id) {
+            const member = membershipSystem.getMemberById(id);
+            member.role = 'moderator';
+            membershipSystem.saveMember(member);
+            membershipSystem.addActivity(`${member.name} was promoted to moderator`);
+            updateAdminPanel();
+            alert(`${member.name} is now a moderator!`);
+        }
+
+        function switchAdminTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('adminPending').classList.add('hidden');
+            document.getElementById('adminAll').classList.add('hidden');
+            document.getElementById('adminAnalytics').classList.add('hidden');
+
+            if (tab === 'pending') document.getElementById('adminPending').classList.remove('hidden');
+            if (tab === 'all') document.getElementById('adminAll').classList.remove('hidden');
+            if (tab === 'analytics') document.getElementById('adminAnalytics').classList.remove('hidden');
+        }
+
+        function switchCommunityTab(tab) {
+            // Tab switching logic for community overview
+            updateCommunityStats();
+        }
+
+        function upgradeTier(tier) {
+            const user = membershipSystem.currentUser;
+            user.tier = tier;
+            membershipSystem.saveMember(user);
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
+            membershipSystem.addActivity(`${user.name} upgraded to ${tier} tier`);
+            updateDashboard();
+            updateProfile();
+            alert(`Successfully upgraded to ${tier} plan!`);
+        }
+
+        // Content generation (with membership tracking)
         async function generateContent() {
             const audience = document.getElementById('audience').value;
             const contentType = document.getElementById('contentType').value;
             const brief = document.getElementById('contentBrief').value;
-            
+
             if (!audience || !brief) {
                 alert('Please fill in all fields');
                 return;
             }
 
             await new Promise(resolve => setTimeout(resolve, 2000));
-            
+
             const content = `Subject: Transform Your Business Operations - Proven Results for ${audience}
 
 Dear [Name],
@@ -448,10 +1243,10 @@ ${brief}
 
 Here's what makes this opportunity particularly relevant for ${audience}:
 
-âœ“ Immediate Impact: See results within the first 30 days
-âœ“ Proven ROI: Average 300% return on investment  
-âœ“ Risk-Free: 100% satisfaction guarantee
-âœ“ Expert Support: Dedicated team to ensure your success
+✓ Immediate Impact: See results within the first 30 days
+✓ Proven ROI: Average 300% return on investment
+✓ Risk-Free: 100% satisfaction guarantee
+✓ Expert Support: Dedicated team to ensure your success
 
 What Our Clients Say:
 "This solution transformed our operations completely. We're saving 15 hours per week and our productivity has skyrocketed." - Sarah M., CEO
@@ -470,31 +1265,33 @@ Best regards,
 [Your Name]
 
 P.S. This offer expires in 7 days. Secure your spot today by replying to this email.`;
-            
+
             document.getElementById('contentOutput').textContent = content;
             document.getElementById('generatedContent').style.display = 'block';
-            
-            stats.contentCount++;
-            document.getElementById('contentCount').textContent = stats.contentCount;
+
+            membershipSystem.updateMemberStats(membershipSystem.currentUser.id, 'content');
+            membershipSystem.addActivity(`${membershipSystem.currentUser.name} generated content`);
+            updateDashboard();
         }
 
-        // Image generation
+        // Image generation (with membership tracking)
         async function generateImage() {
             const prompt = document.getElementById('imagePrompt').value;
-            
+
             if (!prompt) {
                 alert('Please enter an image description');
                 return;
             }
 
             await new Promise(resolve => setTimeout(resolve, 3000));
-            
+
             const imageUrl = `https://picsum.photos/512/512?random=${Date.now()}`;
             document.getElementById('imageOutput').src = imageUrl;
             document.getElementById('generatedImage').style.display = 'block';
-            
-            stats.imageCount++;
-            document.getElementById('imageCount').textContent = stats.imageCount;
+
+            membershipSystem.updateMemberStats(membershipSystem.currentUser.id, 'image');
+            membershipSystem.addActivity(`${membershipSystem.currentUser.name} generated an image`);
+            updateDashboard();
         }
 
         // Email campaign generation
@@ -502,14 +1299,14 @@ P.S. This offer expires in 7 days. Secure your spot today by replying to this em
             const audience = document.getElementById('emailAudience').value;
             const type = document.getElementById('emailType').value;
             const goal = document.getElementById('emailGoal').value;
-            
+
             if (!audience || !goal) {
                 alert('Please fill in all fields');
                 return;
             }
 
             await new Promise(resolve => setTimeout(resolve, 2000));
-            
+
             const emailContent = `Email Campaign: ${type.charAt(0).toUpperCase() + type.slice(1)} Series
 
 Target Audience: ${audience}
@@ -544,9 +1341,10 @@ Expected Conversion: 2-5%`;
 
             document.getElementById('emailOutput').textContent = emailContent;
             document.getElementById('emailResult').style.display = 'block';
-            
-            stats.contentCount++;
-            document.getElementById('contentCount').textContent = stats.contentCount;
+
+            membershipSystem.updateMemberStats(membershipSystem.currentUser.id, 'content');
+            membershipSystem.addActivity(`${membershipSystem.currentUser.name} created email campaign`);
+            updateDashboard();
         }
 
         // Social media generation
@@ -554,31 +1352,31 @@ Expected Conversion: 2-5%`;
             const platform = document.getElementById('socialPlatform').value;
             const topic = document.getElementById('socialTopic').value;
             const message = document.getElementById('socialMessage').value;
-            
+
             if (!topic || !message) {
                 alert('Please fill in all fields');
                 return;
             }
 
             await new Promise(resolve => setTimeout(resolve, 1500));
-            
+
             const socialContent = `${platform.toUpperCase()} POST
 
-ðŸš€ ${topic} - Game Changer Alert! 
+🚀 ${topic} - Game Changer Alert!
 
 ${message}
 
-ðŸ’¡ Key Benefits:
-â€¢ Immediate results
-â€¢ Easy implementation  
-â€¢ Proven success rate
+💡 Key Benefits:
+• Immediate results
+• Easy implementation
+• Proven success rate
 
-ðŸŽ¯ Perfect for businesses looking to:
-âœ“ Increase efficiency
-âœ“ Save time and money
-âœ“ Stay competitive
+🎯 Perfect for businesses looking to:
+✓ Increase efficiency
+✓ Save time and money
+✓ Stay competitive
 
-ðŸ‘† Ready to learn more? Comment "INTERESTED" below!
+👆 Ready to learn more? Comment "INTERESTED" below!
 
 #${topic.replace(/\s+/g, '')} #BusinessGrowth #Success #Innovation
 
@@ -586,9 +1384,10 @@ Best posting time: ${platform === 'linkedin' ? '8-10 AM, Tuesday-Thursday' : pla
 
             document.getElementById('socialOutput').textContent = socialContent;
             document.getElementById('socialResult').style.display = 'block';
-            
-            stats.contentCount++;
-            document.getElementById('contentCount').textContent = stats.contentCount;
+
+            membershipSystem.updateMemberStats(membershipSystem.currentUser.id, 'content');
+            membershipSystem.addActivity(`${membershipSystem.currentUser.name} created social media post`);
+            updateDashboard();
         }
 
         // Document generation
@@ -596,14 +1395,14 @@ Best posting time: ${platform === 'linkedin' ? '8-10 AM, Tuesday-Thursday' : pla
             const type = document.getElementById('docType').value;
             const client = document.getElementById('docClient').value;
             const details = document.getElementById('docDetails').value;
-            
+
             if (!client || !details) {
                 alert('Please fill in all fields');
                 return;
             }
 
             await new Promise(resolve => setTimeout(resolve, 2500));
-            
+
             const docContent = `${type.toUpperCase().replace('-', ' ')}
 
 Client: ${client}
@@ -623,11 +1422,11 @@ SCOPE OF WORK
 5. Reporting and Documentation
 
 DELIVERABLES
-â€¢ Detailed project timeline
-â€¢ Regular progress reports
-â€¢ Final implementation guide
-â€¢ Training materials
-â€¢ Ongoing support documentation
+• Detailed project timeline
+• Regular progress reports
+• Final implementation guide
+• Training materials
+• Ongoing support documentation
 
 INVESTMENT
 Total Investment: $X,XXX
@@ -649,9 +1448,10 @@ Best regards,
 
             document.getElementById('docOutput').textContent = docContent;
             document.getElementById('docResult').style.display = 'block';
-            
-            stats.contentCount++;
-            document.getElementById('contentCount').textContent = stats.contentCount;
+
+            membershipSystem.updateMemberStats(membershipSystem.currentUser.id, 'content');
+            membershipSystem.addActivity(`${membershipSystem.currentUser.name} generated a document`);
+            updateDashboard();
         }
 
         // Voice script generation
@@ -659,14 +1459,14 @@ Best regards,
             const type = document.getElementById('voiceType').value;
             const topic = document.getElementById('voiceTopic').value;
             const notes = document.getElementById('voiceNotes').value;
-            
+
             if (!topic || !notes) {
                 alert('Please fill in all fields');
                 return;
             }
 
             await new Promise(resolve => setTimeout(resolve, 2000));
-            
+
             const voiceContent = `${type.toUpperCase().replace('-', ' ')} SCRIPT
 
 Topic: ${topic}
@@ -676,7 +1476,7 @@ Tone: Professional, engaging, conversational
 [INTRO - 30 seconds]
 Hello and welcome! I'm excited to share with you today about ${topic}. ${notes}
 
-[HOOK - 15 seconds]  
+[HOOK - 15 seconds]
 Did you know that 87% of businesses struggle with this exact challenge? Well, today we're going to change that.
 
 [MAIN CONTENT - 2-3 minutes]
@@ -706,16 +1506,17 @@ PRODUCTION NOTES:
 
             document.getElementById('voiceOutput').textContent = voiceContent;
             document.getElementById('voiceResult').style.display = 'block';
-            
-            stats.contentCount++;
-            document.getElementById('contentCount').textContent = stats.contentCount;
+
+            membershipSystem.updateMemberStats(membershipSystem.currentUser.id, 'content');
+            membershipSystem.addActivity(`${membershipSystem.currentUser.name} created voice script`);
+            updateDashboard();
         }
 
         // Audio transcription
         function handleAudioUpload() {
             const file = document.getElementById('audioFile').files[0];
             if (!file) return;
-            
+
             setTimeout(() => {
                 const transcription = `Audio Transcription Results
 
@@ -724,7 +1525,7 @@ Duration: ${Math.floor(Math.random() * 10) + 5} minutes
 Confidence: 95%
 
 Transcript:
-Welcome to today's business meeting. We're here to discuss the quarterly results and plan for the upcoming initiatives. 
+Welcome to today's business meeting. We're here to discuss the quarterly results and plan for the upcoming initiatives.
 
 The sales team has exceeded expectations this quarter, achieving 120% of our target. This success can be attributed to our new customer acquisition strategy and improved product offerings.
 
@@ -749,9 +1550,10 @@ Processing time: 2.3 seconds`;
 
                 document.getElementById('transcriptionText').textContent = transcription;
                 document.getElementById('transcriptionResult').style.display = 'block';
-                
-                stats.contentCount++;
-                document.getElementById('contentCount').textContent = stats.contentCount;
+
+                membershipSystem.updateMemberStats(membershipSystem.currentUser.id, 'content');
+                membershipSystem.addActivity(`${membershipSystem.currentUser.name} transcribed audio`);
+                updateDashboard();
             }, 3000);
         }
 
@@ -834,10 +1636,6 @@ Processing time: 2.3 seconds`;
             document.body.appendChild(element);
             element.click();
             document.body.removeChild(element);
-        }
-
-        function subscribe(plan) {
-            alert(`Subscription upgrade to ${plan} plan coming soon! Contact support for early access.`);
         }
     </script>
 </body>
