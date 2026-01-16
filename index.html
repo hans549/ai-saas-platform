@@ -59,6 +59,58 @@
         .current { background: #666; color: white; }
         .upgrade { background: #48bb78; color: white; }
         @media (max-width: 768px) { .layout { flex-direction: column; } .sidebar { width: 100%; } .stats, .metrics, .pricing { grid-template-columns: 1fr; } }
+
+        /* Community Styles */
+        .community-tabs { display: flex; gap: 16px; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; }
+        .community-tab { padding: 12px 24px; background: none; border: none; color: #666; font-size: 16px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+        .community-tab:hover { color: #333; }
+        .community-tab.active { color: #4299e1; border-bottom-color: #4299e1; font-weight: 600; }
+        .community-section { display: none; }
+        .community-section.active { display: block; }
+        .members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .member-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; transition: transform 0.2s; }
+        .member-card:hover { transform: translateY(-4px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .member-avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 32px; font-weight: bold; }
+        .member-name { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 4px; }
+        .member-title { font-size: 14px; color: #666; margin-bottom: 8px; }
+        .member-badge { display: inline-block; padding: 4px 12px; background: #f0f4ff; color: #4299e1; border-radius: 12px; font-size: 12px; font-weight: 600; margin: 4px 2px; }
+        .member-stats { display: flex; justify-content: space-around; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+        .member-stat { text-align: center; }
+        .member-stat-value { font-size: 18px; font-weight: bold; color: #333; }
+        .member-stat-label { font-size: 11px; color: #666; text-transform: uppercase; }
+        .message-btn { width: 100%; padding: 8px 16px; background: #4299e1; color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 12px; font-size: 14px; }
+        .message-btn:hover { background: #3182ce; }
+        .forum-threads { display: flex; flex-direction: column; gap: 12px; }
+        .thread-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.2s; }
+        .thread-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .thread-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; }
+        .thread-title { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 8px; }
+        .thread-author { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #666; }
+        .thread-avatar-small { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #48bb78, #4299e1); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: bold; }
+        .thread-content { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 12px; }
+        .thread-meta { display: flex; gap: 20px; font-size: 13px; color: #999; }
+        .thread-meta span { display: flex; align-items: center; gap: 4px; }
+        .category-tag { display: inline-block; padding: 4px 12px; background: #e6f7ff; color: #0066cc; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .new-thread-btn { padding: 12px 24px; background: #48bb78; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600; margin-bottom: 24px; }
+        .new-thread-btn:hover { background: #38a169; }
+        .activity-feed { display: flex; flex-direction: column; gap: 16px; }
+        .activity-item { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; gap: 16px; }
+        .activity-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #f093fb, #f5576c); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: bold; flex-shrink: 0; }
+        .activity-content { flex: 1; }
+        .activity-header { font-size: 14px; color: #333; margin-bottom: 6px; }
+        .activity-header strong { font-weight: 600; }
+        .activity-text { color: #666; font-size: 14px; line-height: 1.5; }
+        .activity-time { font-size: 12px; color: #999; margin-top: 8px; }
+        .leaderboard { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 24px; }
+        .leaderboard-title { font-size: 20px; font-weight: 600; color: #333; margin-bottom: 20px; }
+        .leaderboard-list { display: flex; flex-direction: column; gap: 12px; }
+        .leaderboard-item { display: flex; align-items: center; gap: 16px; padding: 12px; background: #f7fafc; border-radius: 8px; }
+        .leaderboard-rank { font-size: 20px; font-weight: bold; color: #4299e1; width: 40px; text-align: center; }
+        .leaderboard-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold; }
+        .leaderboard-info { flex: 1; }
+        .leaderboard-name { font-size: 16px; font-weight: 600; color: #333; }
+        .leaderboard-score { font-size: 18px; font-weight: bold; color: #48bb78; }
+        @media (max-width: 768px) { .members-grid { grid-template-columns: 1fr; } .community-tabs { overflow-x: auto; } }
     </style>
 </head>
 <body>
@@ -98,7 +150,8 @@
                 <button class="nav" onclick="showTool('documents')">ðŸ“„ Business Documents</button>
                 <button class="nav" onclick="showTool('voice')">ðŸŽ¤ Voice Studio</button>
                 <button class="nav" onclick="showTool('transcription')">ðŸŽ§ Audio Transcription</button>
-                <button class="nav" onclick="showTool('pricing')">ðŸ’° Pricing</button>
+                <button class="nav" onclick="showTool('community')">ðŸ'¥ Community</button>
+                <button class="nav" onclick="showTool('pricing')">ðŸ'° Pricing</button>
             </nav>
 
             <!-- Content -->
@@ -385,6 +438,63 @@
                                     <li>âœ“ API access</li>
                                 </ul>
                                 <button onclick="subscribe('premium')" class="upgrade-btn upgrade">Upgrade Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Community -->
+                <div id="community" class="tool-content hidden">
+                    <div class="tool">
+                        <h2>ðŸ'¥ Community Hub</h2>
+
+                        <!-- Community Tabs -->
+                        <div class="community-tabs">
+                            <button class="community-tab active" onclick="showCommunitySection('members')">Members</button>
+                            <button class="community-tab" onclick="showCommunitySection('forum')">Forum</button>
+                            <button class="community-tab" onclick="showCommunitySection('activity')">Activity</button>
+                            <button class="community-tab" onclick="showCommunitySection('leaderboard')">Leaderboard</button>
+                        </div>
+
+                        <!-- Members Section -->
+                        <div id="members" class="community-section active">
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="font-size: 22px; margin-bottom: 8px; color: #333;">Community Members</h3>
+                                <p style="color: #666; font-size: 14px;">Connect with fellow entrepreneurs and business leaders</p>
+                            </div>
+                            <div class="members-grid" id="membersGrid"></div>
+                        </div>
+
+                        <!-- Forum Section -->
+                        <div id="forum" class="community-section">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <div>
+                                    <h3 style="font-size: 22px; margin-bottom: 8px; color: #333;">Discussion Forum</h3>
+                                    <p style="color: #666; font-size: 14px;">Share ideas, ask questions, and help others</p>
+                                </div>
+                                <button class="new-thread-btn" onclick="createNewThread()">âœï¸ New Thread</button>
+                            </div>
+                            <div class="forum-threads" id="forumThreads"></div>
+                        </div>
+
+                        <!-- Activity Section -->
+                        <div id="activity" class="community-section">
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="font-size: 22px; margin-bottom: 8px; color: #333;">Recent Activity</h3>
+                                <p style="color: #666; font-size: 14px;">See what's happening in the community</p>
+                            </div>
+                            <div class="activity-feed" id="activityFeed"></div>
+                        </div>
+
+                        <!-- Leaderboard Section -->
+                        <div id="leaderboard" class="community-section">
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="font-size: 22px; margin-bottom: 8px; color: #333;">Top Contributors</h3>
+                                <p style="color: #666; font-size: 14px;">Community members making the biggest impact</p>
+                            </div>
+                            <div class="leaderboard">
+                                <div class="leaderboard-title">ðŸ† This Month's Leaders</div>
+                                <div class="leaderboard-list" id="leaderboardList"></div>
                             </div>
                         </div>
                     </div>
@@ -839,6 +949,225 @@ Processing time: 2.3 seconds`;
         function subscribe(plan) {
             alert(`Subscription upgrade to ${plan} plan coming soon! Contact support for early access.`);
         }
+
+        // Community Data
+        const communityMembers = [
+            { name: 'Sarah Johnson', title: 'Marketing Director', initials: 'SJ', badges: ['Pro Member', 'Top Contributor'], posts: 156, likes: 892, joined: '2023' },
+            { name: 'Michael Chen', title: 'CEO & Founder', initials: 'MC', badges: ['Premium', 'Expert'], posts: 243, likes: 1456, joined: '2022' },
+            { name: 'Emma Williams', title: 'Content Strategist', initials: 'EW', badges: ['Pro Member', 'Helpful'], posts: 189, likes: 734, joined: '2023' },
+            { name: 'David Martinez', title: 'Sales Manager', initials: 'DM', badges: ['Premium'], posts: 98, likes: 456, joined: '2024' },
+            { name: 'Lisa Anderson', title: 'Product Designer', initials: 'LA', badges: ['Pro Member', 'Creative'], posts: 167, likes: 923, joined: '2023' },
+            { name: 'James Wilson', title: 'Tech Entrepreneur', initials: 'JW', badges: ['Premium', 'Innovator'], posts: 312, likes: 1789, joined: '2022' },
+            { name: 'Maria Garcia', title: 'Brand Consultant', initials: 'MG', badges: ['Pro Member'], posts: 134, likes: 567, joined: '2024' },
+            { name: 'Robert Taylor', title: 'Business Analyst', initials: 'RT', badges: ['Premium', 'Mentor'], posts: 201, likes: 1034, joined: '2023' }
+        ];
+
+        const forumThreads = [
+            {
+                id: 1,
+                title: 'Best practices for AI content generation in 2024',
+                author: 'Sarah Johnson',
+                authorInitials: 'SJ',
+                category: 'AI Tools',
+                content: 'I wanted to share some insights about using AI for content generation. What strategies have worked best for your business?',
+                replies: 24,
+                views: 356,
+                time: '2 hours ago'
+            },
+            {
+                id: 2,
+                title: 'How to scale your SaaS from $0 to $10k MRR',
+                author: 'Michael Chen',
+                authorInitials: 'MC',
+                category: 'Growth',
+                content: 'After scaling multiple SaaS products, here are the key lessons I learned about reaching your first $10k in monthly recurring revenue...',
+                replies: 45,
+                views: 892,
+                time: '5 hours ago'
+            },
+            {
+                id: 3,
+                title: 'Email marketing automation tips',
+                author: 'Emma Williams',
+                authorInitials: 'EW',
+                category: 'Marketing',
+                content: 'Looking for advice on email automation workflows. What tools and strategies do you recommend?',
+                replies: 18,
+                views: 267,
+                time: '1 day ago'
+            },
+            {
+                id: 4,
+                title: 'Pricing strategy discussion - monthly vs annual',
+                author: 'David Martinez',
+                authorInitials: 'DM',
+                category: 'Business',
+                content: 'Debating whether to offer monthly-only or add annual plans. What has worked for your business?',
+                replies: 31,
+                views: 445,
+                time: '1 day ago'
+            },
+            {
+                id: 5,
+                title: 'Best design tools for landing pages',
+                author: 'Lisa Anderson',
+                authorInitials: 'LA',
+                category: 'Design',
+                content: 'What are your favorite tools for creating high-converting landing pages? Looking for recommendations.',
+                replies: 12,
+                views: 189,
+                time: '2 days ago'
+            }
+        ];
+
+        const activityData = [
+            { name: 'Michael Chen', initials: 'MC', action: 'started a new thread', content: 'How to scale your SaaS from $0 to $10k MRR', time: '5 hours ago' },
+            { name: 'Sarah Johnson', initials: 'SJ', action: 'commented on', content: '"Best practices for AI content generation in 2024"', time: '6 hours ago' },
+            { name: 'Emma Williams', initials: 'EW', action: 'liked', content: 'David Martinez\'s post about pricing strategies', time: '8 hours ago' },
+            { name: 'James Wilson', initials: 'JW', action: 'joined the community', content: 'Welcome to BusinessAI Pro!', time: '12 hours ago' },
+            { name: 'Lisa Anderson', initials: 'LA', action: 'shared', content: 'A helpful guide on design tools', time: '1 day ago' },
+            { name: 'Robert Taylor', initials: 'RT', action: 'earned the badge', content: '"Mentor" for helping 50+ members', time: '1 day ago' },
+            { name: 'Maria Garcia', initials: 'MG', action: 'started a new thread', content: 'Brand strategy for startups', time: '2 days ago' },
+            { name: 'David Martinez', initials: 'DM', action: 'commented on', content: '"Email marketing automation tips"', time: '2 days ago' }
+        ];
+
+        // Community Functions
+        function showCommunitySection(section) {
+            // Hide all sections
+            document.querySelectorAll('.community-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.community-tab').forEach(el => el.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById(section).classList.add('active');
+            event.target.classList.add('active');
+
+            // Load data based on section
+            if (section === 'members') {
+                loadMembers();
+            } else if (section === 'forum') {
+                loadForumThreads();
+            } else if (section === 'activity') {
+                loadActivityFeed();
+            } else if (section === 'leaderboard') {
+                loadLeaderboard();
+            }
+        }
+
+        function loadMembers() {
+            const grid = document.getElementById('membersGrid');
+            if (grid.children.length > 0) return; // Already loaded
+
+            grid.innerHTML = communityMembers.map(member => `
+                <div class="member-card">
+                    <div class="member-avatar">${member.initials}</div>
+                    <div class="member-name">${member.name}</div>
+                    <div class="member-title">${member.title}</div>
+                    <div>
+                        ${member.badges.map(badge => `<span class="member-badge">${badge}</span>`).join('')}
+                    </div>
+                    <div class="member-stats">
+                        <div class="member-stat">
+                            <div class="member-stat-value">${member.posts}</div>
+                            <div class="member-stat-label">Posts</div>
+                        </div>
+                        <div class="member-stat">
+                            <div class="member-stat-value">${member.likes}</div>
+                            <div class="member-stat-label">Likes</div>
+                        </div>
+                        <div class="member-stat">
+                            <div class="member-stat-value">${member.joined}</div>
+                            <div class="member-stat-label">Joined</div>
+                        </div>
+                    </div>
+                    <button class="message-btn" onclick="sendMessage('${member.name}')">ðŸ'¬ Message</button>
+                </div>
+            `).join('');
+        }
+
+        function loadForumThreads() {
+            const container = document.getElementById('forumThreads');
+            if (container.children.length > 0) return; // Already loaded
+
+            container.innerHTML = forumThreads.map(thread => `
+                <div class="thread-card" onclick="openThread(${thread.id})">
+                    <div class="thread-header">
+                        <div>
+                            <span class="category-tag">${thread.category}</span>
+                            <div class="thread-title">${thread.title}</div>
+                            <div class="thread-author">
+                                <div class="thread-avatar-small">${thread.authorInitials}</div>
+                                <span>${thread.author}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thread-content">${thread.content}</div>
+                    <div class="thread-meta">
+                        <span>ðŸ'¬ ${thread.replies} replies</span>
+                        <span>ðŸ'€ ${thread.views} views</span>
+                        <span>ðŸ•' ${thread.time}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadActivityFeed() {
+            const feed = document.getElementById('activityFeed');
+            if (feed.children.length > 0) return; // Already loaded
+
+            feed.innerHTML = activityData.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-avatar">${activity.initials}</div>
+                    <div class="activity-content">
+                        <div class="activity-header">
+                            <strong>${activity.name}</strong> ${activity.action}
+                        </div>
+                        <div class="activity-text">${activity.content}</div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadLeaderboard() {
+            const list = document.getElementById('leaderboardList');
+            if (list.children.length > 0) return; // Already loaded
+
+            // Sort members by total engagement (posts + likes)
+            const sortedMembers = [...communityMembers]
+                .sort((a, b) => (b.posts + b.likes) - (a.posts + a.likes))
+                .slice(0, 10);
+
+            list.innerHTML = sortedMembers.map((member, index) => `
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">${index + 1}</div>
+                    <div class="leaderboard-avatar">${member.initials}</div>
+                    <div class="leaderboard-info">
+                        <div class="leaderboard-name">${member.name}</div>
+                        <div style="font-size: 13px; color: #666;">${member.title}</div>
+                    </div>
+                    <div class="leaderboard-score">${member.posts + member.likes} pts</div>
+                </div>
+            `).join('');
+        }
+
+        function sendMessage(memberName) {
+            alert(`Messaging feature coming soon! You'll be able to send a direct message to ${memberName}.`);
+        }
+
+        function openThread(threadId) {
+            const thread = forumThreads.find(t => t.id === threadId);
+            alert(`Opening thread: "${thread.title}"\n\nFull thread view coming soon! You'll be able to read all ${thread.replies} replies and add your own comments.`);
+        }
+
+        function createNewThread() {
+            alert('Create New Thread feature coming soon! You\'ll be able to:\n\nâœï¸ Write your post\nðŸ·ï¸ Choose a category\nðŸ"¸ Add images\nðŸ"— Include links\n\nStay tuned!');
+        }
+
+        // Initialize community when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pre-load members data
+            loadMembers();
+        });
     </script>
 </body>
 </html>
